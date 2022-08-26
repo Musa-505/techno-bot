@@ -1,87 +1,61 @@
-from bs4 import BeautifulSoup
-from fake_useragent import UserAgent
-import datetime
-import requests
-import io
-import csv
+from operator import truediv
+import config
 import openpyxl
 
-# aw = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-# now = "kaspi.storefront.cookie.city=750000000;"
-# "Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/30.0.1599.17 Safari/537.36"
-
-def collect_data(city_code='750000000'):
-    cur_time = datetime.datetime.now().strftime('%d_%m_%Y_%H_%M')
-    us = UserAgent()
-
-    headers = {
-    	'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-    	'User-Agent': us.random
-    }
-
-    cookies = {
-    	'kaspi.storefront.cookie.city': f'{ city_code}'
-    }
-
-    # response = requests.get(url='https://kaspi.kz/shop/c/smartphones/brand-apple/', headers=headers, cookies=cookies)
-
-    # with io.open(f'index.html', 'w', encoding="utf-8") as file:
-    # 	file.write(response.text)
-    with open("index.html", encoding="utf-8") as file:
-        src = file.read()
-
-    soup = BeautifulSoup(src, 'lxml')
-
-    city = soup.find('a', class_='current-location')
-
-    card_name = soup.findAll('a', class_='item-card__name')
-    card_price = soup.findAll('span', class_='item-card__prices-price')
-
-    card_as = soup.findAll('span', class_='item-card__prices-title')
-
-    card_prices = soup.findAll('div', class_='item-card__debet')
-    card_inc = soup.findAll('div', class_='item-card__instalment')
-
-    for noneco in card_prices:
-        none = noneco.text
-
-    for incd in card_inc:
-        inc = incd.text
-
-    card_price_p = soup.findAll('div', class_='item-card__instalment')
-
-    card_info = soup.findAll('span', class_='item-card__add-info') 
-    
-    def create_xlsx():
-        row = 2
-        book = openpyxl.Workbook()
-
-        sheet = book.active
-
-        sheet['A1'] = "Name object"
-        sheet['B1'] = "Price object"
-        sheet['C1'] = "Price object"
-
-        for name in card_name:
-            sheet[row][0].value = name.text
-            for price in card_prices:
-                sheet[row][1].value = none
-                for iop in card_inc:
-                    sheet[row][2].value = inc
-            row += 1
-            
+def informations():
+    city = config.soup.find('a', class_='current-location')
+    card_name = config.soup.findAll('a', class_='item-card__name')
+    card_price = config.soup.findAll('span', class_='item-card__prices-price')
+    card_as = config.soup.findAll('span', class_='item-card__prices-title')
+    card_prices = config.soup.findAll('div', class_='item-card__debet')
+    card_inc = config.soup.findAll('div', class_='item-card__instalment')
+    card_price_p = config.soup.findAll('div', class_='item-card__instalment')
+    card_info = config.soup.findAll('span', class_='item-card__add-info')
+    code = config.soup.findAll('a', href=True, class_="item-card__name ddl_product_link")
         
-
-        book.save("my_book.xlsx")
-        book.close()
+    # for bone in card_name:
+    #     cardname = bone.text
+    # for c in card_prices:
+    #     cardprices =  c.text
+    # for v in card_inc:
+    #     cardinc =  v.text
     
-    create_xlsx()
+    link_kaspi = 'https://kaspi.kz'
+    
+    book = openpyxl.Workbook()
+    sheet = book.active
+
+    sheet['A1'] = 'Name'
+    sheet['B1'] = "Price"
+    sheet['C1'] = "Inc"
+    sheet['D1'] = "Link"
+    row = 2
+    for name in card_name:
+        sheet[row][0].value = name.text
+        row += 1
+    
+    row = 2
+    for price in card_prices:
+        sheet[row][1].value = price.text
+        row += 1
+        
+    row = 2
+    for inc in card_inc:
+        sheet[row][2].value = inc.text
+        row += 1
+
+    row = 2
+    for link in code:
+        first = link['href']
+        sheet[row][3].value = link_kaspi+first
+        row += 1
+    
+    file_name = input("File name: ")
+    book.save(file_name+".xlsx")
+    book.close()
 
 def main():
-    collect_data(city_code='750000000')
+    informations()
 
 if __name__ == '__main__':
     main()
-
-# def collect_data(city_code='750000000'):
-#     cur_time = datetime.datetime.now().strftime
