@@ -1,8 +1,7 @@
-from operator import truediv
 import config
 import openpyxl
 
-def informations():
+def informations(card_name):
     city = config.soup.find('a', class_='current-location')
     card_name = config.soup.findAll('a', class_='item-card__name')
     card_price = config.soup.findAll('span', class_='item-card__prices-price')
@@ -12,13 +11,6 @@ def informations():
     card_price_p = config.soup.findAll('div', class_='item-card__instalment')
     card_info = config.soup.findAll('span', class_='item-card__add-info')
     code = config.soup.findAll('a', href=True, class_="item-card__name ddl_product_link")
-        
-    # for bone in card_name:
-    #     cardname = bone.text
-    # for c in card_prices:
-    #     cardprices =  c.text
-    # for v in card_inc:
-    #     cardinc =  v.text
     
     link_kaspi = 'https://kaspi.kz'
     
