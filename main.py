@@ -11,6 +11,7 @@ def informations(card_name):
     card_price_p = config.soup.findAll('div', class_='item-card__instalment')
     card_info = config.soup.findAll('span', class_='item-card__add-info')
     code = config.soup.findAll('a', href=True, class_="item-card__name ddl_product_link")
+    imgs = config.soup.findAll('img', class_="item-card__image")
     
     link_kaspi = 'https://kaspi.kz'
     
@@ -21,6 +22,8 @@ def informations(card_name):
     sheet['B1'] = "Price"
     sheet['C1'] = "Inc"
     sheet['D1'] = "Link"
+    sheet['E1'] = "Img"
+    
     row = 2
     for name in card_name:
         sheet[row][0].value = name.text
@@ -40,6 +43,12 @@ def informations(card_name):
     for link in code:
         first = link['href']
         sheet[row][3].value = link_kaspi+first
+        row += 1
+    
+    row = 2
+    for img in imgs:
+        image = img['src']
+        sheet[row][3].value = image
         row += 1
     
     file_name = input("File name: ")

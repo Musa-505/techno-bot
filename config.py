@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
 import requests
+import lxml
 
 city_code='750000000'
 us = UserAgent()

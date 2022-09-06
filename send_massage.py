@@ -23,15 +23,15 @@ async def start(message: types.Message):
 @dp.message_handler(Text(equals='Almaty'))
 async def almaty(message: types.Message):
     await message.answer('Please select type phone....')
-    
-    # case = ['Iphone']
-    # keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
-    # keyboard.add(*case)
-    # @dp.message_handler(Text(equals='Iphone'))
-    # async def Iphone(message: types.Message):
-    #     cells = sheet['A2':'B13']
-    #     for i1,i2 in cells:  
-    #         await message.answer("{0:8} {1:8}".format(i1.value,i2.value))
+    start_buttons = ['Iphone', 'Samsung']
+    keyboard = types.ReplyKeyboardMarkup(resize_keyboard=True)
+    keyboard.add(*start_buttons)
+
+    @dp.message_handler(Text(equals='Iphone'))
+    async def almaty(message: types.Message):
+        cells = sheet['A2':'B13']
+        for i1,i2 in cells:  
+            await message.answer("{0:8} {1:8}".format(i1.value,i2.value))
 
 @dp.message_handler(Text(equals='Nur-Sultan'))
 async def nur_sultan(message: types.Message):
